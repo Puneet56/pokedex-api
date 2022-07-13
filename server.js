@@ -5,6 +5,8 @@ import identifyPokemonFromImage from "./tfmodel/model.js";
 import fs from "fs";
 import axios from "axios";
 import { pokemonList } from "./services/pokemonService.js";
+impport cors from "cors";
+
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -17,10 +19,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cors());
+
 
 app.post("/api/identify", upload.single("image"), async (req, res) => {
 	const image = fs.readFileSync(req.file.path);
